@@ -4,6 +4,6 @@
     "description": "Allows players to jump infinitely in the air",
     "code": "-- Infinite Jump Script\nlocal Player = game.Players.LocalPlayer\nlocal Character = Player.Character or Player.CharacterAdded:Wait()\nlocal Humanoid = Character:WaitForChild(\"Humanoid\")\n\nlocal function onJumpRequest()\n    Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)\nend\n\ngame:GetService(\"UserInputService\").JumpRequest:Connect(onJumpRequest)",
     "author": "ScriptMaster",
-    "date": "2023-10-15"
+    "date": "2025-12-12"
   }
 ]
