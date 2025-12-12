@@ -1,1 +1,489 @@
-just a lil holder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Scripts Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 5px solid #f59e0b;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-box {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 12px;
+            border: 2px solid #334155;
+            background-color: #1e293b;
+            color: #fff;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .search-info {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+        
+        .script-count {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+        
+        .scripts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .script-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 6px solid #3b82f6;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .script-header {
+            padding: 25px;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .script-title {
+            font-size: 1.8rem;
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+        
+        .script-description {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .script-meta {
+            display: flex;
+            gap: 20px;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+        
+        .script-body {
+            padding: 25px;
+        }
+        
+        .script-code {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .script-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .copy-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .copy-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .copy-btn.copied {
+            background-color: #10b981;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #10b981;
+            color: white;
+            padding: 18px 28px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            color: #94a3b8;
+            font-size: 1.4rem;
+            background-color: #1e293b;
+            border-radius: 15px;
+            border: 2px dashed #475569;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #3b82f6;
+            font-size: 1.4rem;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 60px;
+            color: #ef4444;
+            font-size: 1.3rem;
+            background-color: #1e293b;
+            border-radius: 15px;
+            border-left: 6px solid #ef4444;
+        }
+        
+        .error-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #0f172a;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 1rem;
+            text-align: left;
+            color: #cbd5e1;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 1rem;
+            padding-top: 30px;
+            border-top: 1px solid #334155;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .script-title {
+                font-size: 1.5rem;
+            }
+            
+            .script-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .script-actions {
+                flex-direction: column;
+            }
+            
+            .copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Roblox Scripts</h1>
+            <p class="tagline">Loads scripts from scripts.json file. No categories, just scripts.</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for scripts by name or description...">
+            <div class="search-info">
+                Showing <span id="scriptCount" class="script-count">0</span> scripts
+            </div>
+        </div>
+        
+        <div id="scriptsContainer">
+            <div class="loading">
+                Loading scripts from scripts.json...
+            </div>
+        </div>
+    </main>
+    
+    <div class="notification" id="notification">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Script copied to clipboard!
+    </div>
+    
+    <footer class="container">
+        <p>Roblox Scripts Viewer | Loads scripts from an external scripts.json file</p>
+        <p>Place your scripts.json file in the same folder as this HTML file</p>
+    </footer>
+    
+    <script>
+        // Function to load scripts from external JSON file
+        async function loadScripts() {
+            const scriptsContainer = document.getElementById('scriptsContainer');
+            
+            try {
+                // Fetch scripts from external JSON file
+                const response = await fetch('scripts.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load scripts.json: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Check if data is in expected format
+                if (!Array.isArray(data) && !Array.isArray(data.scripts)) {
+                    throw new Error('scripts.json must contain an array of scripts or an object with a "scripts" property that is an array');
+                }
+                
+                const scripts = Array.isArray(data) ? data : data.scripts;
+                
+                if (!scripts || scripts.length === 0) {
+                    throw new Error('No scripts found in scripts.json');
+                }
+                
+                // Display scripts
+                displayScripts(scripts);
+                
+                // Set up search functionality
+                setupSearch(scripts);
+                
+            } catch (error) {
+                console.error('Error loading scripts:', error);
+                scriptsContainer.innerHTML = `
+                    <div class="error">
+                        <h3>Error loading scripts</h3>
+                        <p>${error.message}</p>
+                        <div class="error-details">
+                            Make sure you have a valid scripts.json file in the same folder as this HTML file.<br><br>
+                            Example scripts.json format:<br>
+                            [<br>
+                            &nbsp;&nbsp;{<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"name": "Script Name",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"description": "Script description",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;"code": "print('Hello World')"<br>
+                            &nbsp;&nbsp;}<br>
+                            ]
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Function to display scripts
+        function displayScripts(scripts) {
+            const scriptsContainer = document.getElementById('scriptsContainer');
+            const scriptCount = document.getElementById('scriptCount');
+            
+            if (scripts.length === 0) {
+                scriptsContainer.innerHTML = '<div class="no-results">No scripts found</div>';
+                scriptCount.textContent = '0';
+                return;
+            }
+            
+            let html = '<div class="scripts-list">';
+            
+            scripts.forEach((script, index) => {
+                const scriptId = `script-${index}`;
+                const code = script.code || '';
+                
+                html += `
+                    <div class="script-card">
+                        <div class="script-header">
+                            <div class="script-title">${script.name || 'Unnamed Script'}</div>
+                            <div class="script-description">${script.description || 'No description provided'}</div>
+                            <div class="script-meta">
+                                ${script.author ? `<span>Author: ${script.author}</span>` : ''}
+                                ${script.date ? `<span>Date: ${script.date}</span>` : ''}
+                                ${script.version ? `<span>Version: ${script.version}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="script-body">
+                            <div class="script-code" id="${scriptId}">${escapeHtml(code)}</div>
+                            <div class="script-actions">
+                                <button class="copy-btn" onclick="copyToClipboard('${scriptId}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copy Script
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            scriptsContainer.innerHTML = html;
+            scriptCount.textContent = scripts.length;
+        }
+        
+        // Function to set up search functionality
+        function setupSearch(scripts) {
+            const searchInput = document.getElementById('searchInput');
+            const scriptCount = document.getElementById('scriptCount');
+            
+            // Filter scripts based on search input
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    displayScripts(scripts);
+                    return;
+                }
+                
+                const filteredScripts = scripts.filter(script => {
+                    const name = (script.name || '').toLowerCase();
+                    const description = (script.description || '').toLowerCase();
+                    const code = (script.code || '').toLowerCase();
+                    const author = (script.author || '').toLowerCase();
+                    
+                    return name.includes(searchTerm) || 
+                           description.includes(searchTerm) || 
+                           code.includes(searchTerm) ||
+                           author.includes(searchTerm);
+                });
+                
+                displayScripts(filteredScripts);
+            });
+        }
+        
+        // Function to copy code to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification();
+                
+                // Visual feedback on button
+                const button = event.target.closest('.copy-btn');
+                if (button) {
+                    const originalText = button.innerHTML;
+                    button.classList.add('copied');
+                    button.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Copied!
+                    `;
+                    
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.innerHTML = originalText;
+                    }, 2000);
+                }
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy script to clipboard');
+            });
+        }
+        
+        // Function to show notification
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Load scripts when page loads
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    </script>
+</body>
+</html>
